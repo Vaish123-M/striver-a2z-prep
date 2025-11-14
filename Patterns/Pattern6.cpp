@@ -1,11 +1,11 @@
-// we are printig (n-row-1)on each line
+//same as pattern 5 but with numbers
 #include<iostream>
 using namespace std;
 
 void print1(int n){
     for(int i=0; i<n; i++) {
-        for(int j = 0; j<n-i+1; j++) {
-            cout << "*";     
+        for(int j = 1; j<n-i+1; j++) {
+            cout << j  << " ";     
         }
         cout << endl;
     }
