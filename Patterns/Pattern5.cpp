@@ -13,11 +13,21 @@ void print1(int n){
 
 int main(){
     int t;
-    cin >> t;
+    if (!(cin >> t)) {
+        // No input provided (likely double-clicked exe or no stdin). Use a sample test.
+        int sample_n = 5;
+        cout << "No input detected. Using sample: t=1, n=5\n\n";
+        print1(sample_n);
+        return 0;
+    }
 
     for (int i = 0; i < t; i++) {
         int n;
-        cin >> n;
+        if (!(cin >> n)) {
+            cerr << "Expected " << t << " values for n but got fewer.\n";
+            return 1;
+        }
         print1(n);
     }
+    return 0;
 }
