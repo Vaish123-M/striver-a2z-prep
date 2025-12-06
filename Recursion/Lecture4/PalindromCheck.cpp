@@ -40,3 +40,18 @@ int main() {
 }
 
 
+//Time complexity: O(n) where n is the length of the string
+//Why O(n)?
+
+//For a string of length n:
+
+//1st call: compare s[0] and s[n-1]
+//2nd call: compare s[1] and s[n-2]
+//3rd call: compare s[2] and s[n-3]
+//~n/2 calls total
+//So, total comparisons ≈ n/2 → O(n).
+
+//Space complexity: O(n) due to recursion stack
+//Each recursive call adds a new layer to the call stack.
+//In the worst case, we make n/2 recursive calls before reaching the base case.
+//Thus, the space used by the call stack is proportional to n.
