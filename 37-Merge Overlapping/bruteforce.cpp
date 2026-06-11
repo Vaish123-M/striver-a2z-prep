@@ -1,88 +1,83 @@
 /*
-===============================================================================
-                    MERGE OVERLAPPING INTERVALS (BRUTE FORCE)
-===============================================================================
+=========================================================
+MERGE OVERLAPPING INTERVALS - BRUTE FORCE
+=========================================================
 
-PROBLEM:
-Merge all overlapping intervals.
+Idea:
+1. Sort intervals by start time.
+2. For every interval:
+   - Merge all overlapping intervals ahead.
+3. Mark merged intervals as visited.
 
-Example:
-[1,3] [2,6] [8,10] [15,18]
-Answer:
-[1,6] [8,10] [15,18]
-
--------------------------------------------------------------------------------
-IDEA:
-
-For every interval,
-check all intervals after it.
-
-If they overlap:
-    merge them.
-
-Mark merged intervals as visited.
-
--------------------------------------------------------------------------------
-WHY BRUTE?
-
-Simple and intuitive.
-Good starting point during interviews.
-
--------------------------------------------------------------------------------
-OVERLAP CONDITION:
-
-next.start <= current.end
-
--------------------------------------------------------------------------------
-TIME:
-Sorting : O(N log N)
-Nested loops : O(N²)
-
-Overall : O(N²)
-
-SPACE:
-Visited array + answer = O(N)
-
--------------------------------------------------------------------------------
-INTERVIEW FLOW:
-
-Brute -> O(N²)
-Can optimize because after sorting,
-merged intervals appear together.
-
-===============================================================================
+Time  : O(N²)
+Space : O(N)
 */
 
-#include<bits/stdc++.h>
+#include <iostream>
+#include <algorithm>
 using namespace std;
 
-vector<vector<int>> mergeOverlappingIntervals(vector<vector<int>> &arr)
+// Interval structure
+struct Interval
 {
-    int n = arr.size();
+    int start;
+    int end;
+};
 
-    sort(arr.begin(), arr.end());
+// Sort by starting time
+bool compare(Interval a, Interval b)
+{
+    return a.start < b.start;
+}
 
-    vector<bool> vis(n, false);
-    vector<vector<int>> ans;
+int main()
+{
+    int n;
+
+    cout << "Enter number of intervals: ";
+    cin >> n;
+
+    Interval arr[100];
+    bool visited[100] = {false};
+
+    cout << "Enter intervals (start end):\n";
 
     for(int i = 0; i < n; i++)
     {
-        if(vis[i]) continue;
+        cin >> arr[i].start >> arr[i].end;
+    }
 
-        int start = arr[i][0];
-        int end = arr[i][1];
+    // Step 1: Sort intervals
+    sort(arr, arr + n, compare);
 
+    cout << "\nMerged Intervals:\n";
+
+    // Step 2: Pick each interval
+    for(int i = 0; i < n; i++)
+    {
+        // Skip already merged intervals
+        if(visited[i])
+            continue;
+
+        int start = arr[i].start;
+        int end = arr[i].end;
+
+        // Step 3: Check all next intervals
         for(int j = i + 1; j < n; j++)
         {
-            if(arr[j][0] <= end)
+            // Overlap condition
+            if(arr[j].start <= end)
             {
-                end = max(end, arr[j][1]);
-                vis[j] = true;
+                // Extend end if needed
+                end = max(end, arr[j].end);
+
+                // Mark as merged
+                visited[j] = true;
             }
         }
 
-        ans.push_back({start, end});
+        cout << start << " " << end << endl;
     }
 
-    return ans;
+    return 0;
 }
