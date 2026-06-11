@@ -6,102 +6,84 @@
 PATTERN:
 Sorting + Greedy
 
--------------------------------------------------------------------------------
-CORE OBSERVATION:
+IDEA:
 
-After sorting,
-if current interval overlaps,
-it can only overlap with the LAST merged interval.
+1. Sort intervals according to start time.
+2. Take first interval.
+3. If current interval overlaps with last merged interval:
+      Merge them.
+4. Otherwise:
+      Add new interval.
 
-No need to check every previous interval.
-
--------------------------------------------------------------------------------
 OVERLAP CONDITION:
 
-current.start <= merged.end
+current_start <= last_merged_end
 
-If overlap:
-    merged.end = max(merged.end, current.end)
-
-Else:
-    push current interval.
-
--------------------------------------------------------------------------------
-INTUITION:
-
-Sorted:
-[1,3] [2,6] [8,10] [15,18]
-
-Take [1,3]
-
-[2,6]
-2 <= 3
-Merge -> [1,6]
-
-[8,10]
-8 > 6
-Store previous and start new.
-
--------------------------------------------------------------------------------
-ALGORITHM:
-
-1. Sort intervals.
-2. Traverse once.
-3. Merge with last interval if possible.
-
--------------------------------------------------------------------------------
 TIME:
-
-Sorting : O(N log N)
-Traversal : O(N)
-
-Overall : O(N log N)
+O(N log N)
 
 SPACE:
+O(N)
 
-Answer vector : O(N)
+INTERVIEW LINE:
 
--------------------------------------------------------------------------------
-INTERVIEW ONE LINER:
-
-"Sort by starting time and greedily merge overlapping intervals."
-
--------------------------------------------------------------------------------
-WHEN TO THINK OF THIS PATTERN?
-
-Keywords:
-✓ Merge Intervals
-✓ Meeting Rooms
-✓ Insert Interval
-✓ Calendar Booking
-✓ Employee Free Time
-
-First thought:
-SORT + GREEDY
+"Sort intervals and merge with the last interval whenever overlap occurs."
 
 ===============================================================================
 */
 
-#include<bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <algorithm>
 using namespace std;
 
-vector<vector<int>> mergeOverlappingIntervals(vector<vector<int>> &arr)
+int main()
 {
-    sort(arr.begin(), arr.end());
+    int n;
 
-    vector<vector<int>> ans;
+    cout << "Enter number of intervals: ";
+    cin >> n;
 
-    for(auto interval : arr)
+    vector<vector<int>> intervals(n, vector<int>(2));
+
+    cout << "Enter intervals:\n";
+
+    for(int i = 0; i < n; i++)
     {
-        if(ans.empty() || interval[0] > ans.back()[1])
+        cin >> intervals[i][0] >> intervals[i][1];
+    }
+
+    // Step 1: Sort intervals according to start time
+    sort(intervals.begin(), intervals.end());
+
+    // Stores final merged intervals
+    vector<vector<int>> merged;
+
+    for(int i = 0; i < n; i++)
+    {
+        // If merged is empty OR no overlap
+        if(merged.empty() || intervals[i][0] > merged.back()[1])
         {
-            ans.push_back(interval);
+            merged.push_back(intervals[i]);
         }
         else
         {
-            ans.back()[1] = max(ans.back()[1], interval[1]);
+            // Overlap found
+            // Update ending point
+            merged.back()[1] =
+            max(merged.back()[1], intervals[i][1]);
         }
     }
 
-    return ans;
+    cout << "\nMerged Intervals:\n";
+
+    for(int i = 0; i < merged.size(); i++)
+    {
+        cout << merged[i][0]
+             << " "
+             << merged[i][1]
+             << endl;
+    }
+
+    return 0;
 }
